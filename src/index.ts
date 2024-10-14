@@ -6,7 +6,7 @@ global.ProductID = 'survey';
 
 const server = startServer({
   cors: {
-    origin: [],
+    origin: [/surveys.linhnv.online/],
   },
   // session: {
   //   secret: process.env.SS_SECRET ?? 'dev',
