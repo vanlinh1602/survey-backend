@@ -1,10 +1,12 @@
 /* eslint-disable class-methods-use-this */
-import { Db } from 'mongodb';
+import { Db, Filter, ObjectId } from 'mongodb';
 import Service from 'services';
 
 export type Response = {
-  _id: string;
-  points: number;
+  _id: ObjectId;
+  surveyId: string;
+  user?: string;
+  answers: CustomObject<string | string[] | string[][]>;
 };
 
 export class ResponsesService extends Service<Response> {
@@ -12,11 +14,21 @@ export class ResponsesService extends Service<Response> {
     super(db, 'responses');
   }
 
-  createSurvey = async (survey: Response): Promise<void> => {
-    await this.collection.insertOne(survey);
+  createResponse = async (response: Response): Promise<string> => {
+    const result = await this.collection.insertOne(response);
+    if (!result.acknowledged) {
+      throw new Error('Failed to create response');
+    }
+    return result.insertedId.toString();
   };
 
-  getSurvey = async (id: string): Promise<Response | null> => {
-    return this.collection.findOne({ _id: id });
+  getResponse = async (id: string): Promise<Response | null> => {
+    return this.collection.findOne({
+      _id: new ObjectId(id),
+    });
+  };
+
+  queryResponses = async (filter: Filter<Response>): Promise<Response[]> => {
+    return this.collection.find(filter).toArray();
   };
 }
