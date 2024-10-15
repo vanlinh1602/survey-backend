@@ -3,10 +3,15 @@ import { Db, Filter } from 'mongodb';
 import Service from 'services';
 
 type Question = {
-  id: string;
-  type: 'input' | 'radio' | 'checkbox' | 'questionGroup';
+  type: 'input' | 'radio' | 'checkbox' | 'questionGroup' | 'select';
   text: string;
-  fields?: string[];
+  required?: boolean;
+  placeholder?: string;
+  params?: string[];
+  subQuestions?: {
+    content: string;
+    placeholder?: string;
+  }[];
 };
 
 export type Survey = {
@@ -15,6 +20,9 @@ export type Survey = {
   title: string;
   description: string;
   questions: Question[];
+  lasted?: {
+    time: number;
+  };
 };
 
 export class SurveysService extends Service<Survey> {
