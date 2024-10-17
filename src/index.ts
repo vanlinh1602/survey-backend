@@ -1,3 +1,5 @@
+import './server/firebase';
+
 import startServer from 'server';
 
 require('dotenv-flow').config();
@@ -8,17 +10,20 @@ const server = startServer({
   cors: {
     origin: [/surveys.linhnv.online/],
   },
-  // session: {
-  //   secret: process.env.SS_SECRET ?? 'dev',
-  //   store: process.env.DB_SRV ?? '',
-  // },
+  session: {
+    secret: process.env.SS_SECRET ?? 'dev',
+    store: process.env.DB_SRV ?? '',
+  },
   port: process.env.PORT ?? '',
   databases: {
-    'xbot-survey': {
+    surveys: {
       srv: process.env.DB_SRV ?? '',
       indexes: {
         responses: {
           spec: { surveyId: 1 },
+        },
+        users: {
+          spec: { email: 1 },
         },
       },
     },

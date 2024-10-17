@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from 'express';
 import _ from 'lodash';
 
 export const validParams = (
@@ -16,4 +17,10 @@ export const validParams = (
     throw new Error(`Missing fields: ${missing.join(', ')}`);
   }
   return true;
+};
+
+export const verified = (req: Request, res: Response, next: NextFunction) => {
+  if (req.session.user) {
+    next();
+  } else res.status(401).send('Unauthorized');
 };
